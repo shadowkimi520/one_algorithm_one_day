@@ -133,8 +133,8 @@ The median is (2 + 3)/2 = 2.5
 
 - 总结
 
-方法1主要是保证在递归的时候TOP(k)中k的规模减半，能保证p+q<=k; 方法2在两个数组中均进行折半查找，因此不能保证两个数组中位数之前的元素个数和小于等于k，即不能保证p+q <= k，只有在p+q<= k的时候才缩减TOP(k)的规模，所以递归结束的标志只能是其中一个数组的元素都被淘汰掉，其事件复杂度为log(m)+log(n)，即log(m*n)，下图是一个测试案例，每个数组均有16个元素，findKth查找第16个元素的时候需要执行9次，案例中打印出了每次起止位置的变化。
+  方法1主要是保证在递归的时候TOP(k)中k的规模减半，能保证p+q<=k; 方法2在两个数组中均进行折半查找，因此不能保证两个数组中位数之前的元素个数和小于等于k，即不能保证p+q <= k，只有在p+q<= k的时候才缩减TOP(k)的规模，所以递归结束的标志只能是其中一个数组的元素都被淘汰掉，其事件复杂度为log(m)+log(n)，即log(m*n)，下图是一个测试案例，每个数组均有16个元素，findKth查找第16个元素的时候需要执行9次，案例中打印出了每次起止位置的变化。
 
-![](https://github.com/shadowkimi520/one_algorithm_one_day/raw/master/images/two_sorted_array_get_median.png) 
+  ![](https://github.com/shadowkimi520/one_algorithm_one_day/raw/master/images/two_sorted_array_get_median.png) 
 
 还有一种更精妙的方法，采用循环替代递归，具体参考 [【分步详解】两个有序数组中的中位数和Top K问题](http://blog.csdn.net/hk2291976/article/details/51107778)

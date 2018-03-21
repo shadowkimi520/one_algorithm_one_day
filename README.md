@@ -2,7 +2,7 @@
 每天一道算法题
 
 
-> 为了应付面试，开始写博客，准备开三个系列，第一个 `JS算法系列`，主要整理一些面试过程中常见的算法题 ； 第二个 `ECMAScript规范解析`，主要是想从ES规范的角度来解析JS代码的实际执行过程，只有真正懂得了底层干了什么，才能完全理解JS，而不需要记住很多零散的坑； 第三个 `JS开源库代码阅读`，通过阅读开源代码加深对JS的理解，同事积累大型项目开发的最佳实践。
+> 为了应付面试，开始写博客，准备开三个系列，第一个 `JS算法系列`，主要整理一些面试过程中常见的算法题 ； 第二个 `ECMAScript规范解析`，主要是想从ES规范的角度来解析JS代码的实际执行过程，只有真正懂得了底层干了什么，才能完全理解JS，而不需要记住很多零散的坑； 第三个 `JS开源库代码阅读`，通过阅读开源代码加深对JS的理解，同时积累大型项目开发的最佳实践。
 
 
 > 本系列为 `JS算法系列`
@@ -25,7 +25,7 @@ Example 2:
 nums1 = [1, 2]
 nums2 = [3, 4]
 
-The median is (2 + 3)/2 = 2.5
+The median is (2 + 3) / 2 = 2.5
 ```
 
 #### 分治法 Divide and Conquer
@@ -93,7 +93,7 @@ The median is (2 + 3)/2 = 2.5
 
     1. 如果arr1[mid1] <= arr2[mid2]，此时又分两种情况：如果从两个数组开始到中位数（包括中位数）的元素个数之和大于k，就表示第K大的元素一定不在arr2[mid2...end2]当中，因此可以将它们淘汰掉；如果从两个数组开始到中位数（包括中位数）的元素个数之和小于等于k，就表示arr1[beg1...mid1]元素一定属于第k大元素之前的部分，即这一部分一定比第k大元素来的小，因此可以将它们先排除掉，问题就缩小为从剩下的数组中查找TOP(k-(mid1-beg1+1))，可以递归求解；
     2. 如果arr1[mid1] > arr2[mid2], 此时又可以分为两种情况：如果从两个数组开始到中位数（包括中位数）的元素个数之和大于k，就表示第K大的元素一定不在arr1[mid1...end1]当中，因此可以将它们淘汰掉；如果从两个数组开始到中位数（包括中位数）的元素个数之和小于等于k，就表示arr2[beg2...mid2]元素一定属于第k大元素之前的部分，即这一部分一定比第k大元素来的小，因此可以将它们先排除掉，问题就缩小为从剩下的数组中查找TOP(k-(mid1-beg1+1))，可以递归求解；
-    
+     
     代码如下：
     ```js
     function findMedian(arr1, arr2) {
@@ -138,3 +138,81 @@ The median is (2 + 3)/2 = 2.5
   ![](https://github.com/shadowkimi520/one_algorithm_one_day/raw/master/images/two_sorted_array_get_median.png) 
 
 还有一种更精妙的方法，采用循环替代递归，具体参考 [【分步详解】两个有序数组中的中位数和Top K问题](http://blog.csdn.net/hk2291976/article/details/51107778)
+
+
+
+### _#_2. 归并排序
+
+归并排序是建立在归并操作上的一种高效的排序算法，该算法是分治法（分而治之）的一个典型应用。
+
+首先考虑下如何将两个有序数组合并，思路很简单：从头开始比较两个数组的对应元素，将较小的元素先插入到临时数组中，更新索引下标；如果其中一个数组为空，则另外一个数组中剩下的元素依次进入临时数组。
+
+代码如下：
+```js
+function mergeArray(arr1, arr2, temp_arr) {
+    var i = 0, j = 0;
+    var len1 = arr1.length, len2 = arr2.length;
+
+    while (i < len1 && j < len2) {
+        if (arr1[i] <= arr2[j]) {
+            temp_arr.push(arr1[i++]);
+        } else {
+            temp_arr.push(arr2[j++]);
+        }
+    }
+
+    while (i < len1) {
+        temp_arr.push(arr1[i++]);
+    }
+    while (j < len2) {
+        temp_arr.push(arr2[j++]);
+    }
+    return temp_arr;
+}
+```
+
+    > 题外话：JS中Array.prototype.push(...items)插入一个元素与使用arr[arr.length] = elem 效率差不多，所不同的是 push 函数可以一次性插入多个元素，并且返回插入后数组的length；需要注意的是引擎会在底层对数组对象的存储及属性访问进行优化，存储稀疏数组的底层对象与存储一般数组的底层对象不同，因此需要避免先行设置数组的length属性，因为这样会使数组从一开始就是稀疏的，底层在存储的时候会采用不同的数据结构进行表示，降低了后续属性访问的效率
+    > Array.prototype.push 是一个泛型函数，也就是说不要求一定在数组对象上调用该函数，因此规范中添加了 `Perform ? Set(O, "length", len, true). ` 操作来更新length属性（即使数组上添加新的元素会自动更新length属性）。
+    ![](https://github.com/shadowkimi520/one_algorithm_one_day/raw/master/images/array_prototype_push.png)
+
+有了上述归并两个有序数组的实现，我们再来看归并排序，它的基本思路就是将数组分为左右两个部分，如果这两个数组中的元素都是有序的，则可以通过归并它们生成最终的有序数组，从而达到排序的目的。
+
+如何让左右两部分各自有序呢？可以将左右两个数组各自再分割成两组，依次下去，当分出来的子数组只有一个元素时，可以认为这个子数组已经有序了，然后再归并相邻的两个子数组。我们可以通过先递归地分割数组，再合并数组就实现了归并排序。
+
+```js
+function mergeArray(arr, first, mid, last, temp_arr) {
+    var i = first, j = mid + 1, k = 0;
+
+    while (i <= mid && j <= last) {
+        if (arr[i] <= arr[j]) {
+            temp_arr[k++] = arr[i++];
+        } else {
+            temp_arr[k++] = arr[j++];
+        }
+    }
+
+    while (i <= mid) {
+        temp_arr[k++] = arr[i++];
+    }
+    while (j <= last) {
+        temp_arr[k++] = arr[j++];
+    }
+
+    for (i = 0; i < len; i++) {
+        arr[first + i] = temp_arr[i];
+    }
+}
+
+function mergeSort(arr, first, last, temp_arr) {
+    if (first < last) {
+        var mid = parseInt((arr.length - 1) / 2);
+        mergeSort(arr, first, mid, temp_arr);
+        mergeSort(arr, mid + 1, last, temp_arr);
+        mergeArray(arr, first, mid, last, temp_arr);
+    }
+}
+
+// mergeSort(arr, 0, arr.length - 1, temp_arr) 调用方式
+```
+
+在所有的排序算法中，归并排序的效率是比较高的。如果数组长度为N，将数组分割成长度为1的子数组需要logN步，中间针对各个长度的子数组归并的时间复杂度为O(N)，所以归并排序的时间复杂度为O(N*logN)；因为需要临时数组来辅助归并过程，所以归并排序的空间复杂度为O(N)。*另外，归并排序是稳定的排序算法，在最差情况和最优情况下的时间复杂度均为O(N_*_logN)。*

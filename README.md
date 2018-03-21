@@ -173,8 +173,8 @@ function mergeArray(arr1, arr2, temp_arr) {
 
     > 题外话：JS中Array.prototype.push(...items)插入一个元素与使用arr[arr.length] = elem 效率差不多，所不同的是 push 函数可以一次性插入多个元素，并且返回插入后数组的length；需要注意的是引擎会在底层对数组对象的存储及属性访问进行优化，存储稀疏数组的底层对象与存储一般数组的底层对象不同，因此需要避免先行设置数组的length属性，因为这样会使数组从一开始就是稀疏的，底层在存储的时候会采用不同的数据结构进行表示，降低了后续属性访问的效率
     > Array.prototype.push 是一个泛型函数，也就是说不要求一定在数组对象上调用该函数，因此规范中添加了 `Perform ? Set(O, "length", len, true). ` 操作来更新length属性（即使数组上添加新的元素会自动更新length属性）。
-    
-    ![](https://github.com/shadowkimi520/one_algorithm_one_day/raw/master/images/array_prototype_push.png)
+
+![](https://github.com/shadowkimi520/one_algorithm_one_day/raw/master/images/array_prototype_push.png)
 
 有了上述归并两个有序数组的实现，我们再来看归并排序，它的基本思路就是将数组分为左右两个部分，如果这两个数组中的元素都是有序的，则可以通过归并它们生成最终的有序数组，从而达到排序的目的。
 

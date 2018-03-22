@@ -6,8 +6,8 @@
 
 
 > 本系列为 `JS算法系列`
-> 1. [求两个已排序数组的中位数](#2)
-> 2. 归并排序
+> 1. [求两个已排序数组的中位数](#1)
+> 2. [归并排序](#2)
 
 ### _#_ 1. <span id='1'>求两个已排序数组的中位数</span>
 
@@ -221,3 +221,213 @@ function mergeSort(arr, first, last, temp_arr) {
 > 总结：通过传入一个全局的temp_arr来减少每次归并过程中局部数组的需求，避免不必要的对象分配及垃圾回收，提高算法效率；另外由于临时数组中归并后的数据会复制到原数组对应位置当中去，因此 temp_arr的下标是从0开始复用的，我们也可以改成`temp_arr[first + k++] = arr[i++];` 不进行复用，此时临时数组的下标与原数组是对应的。
 
 在所有的排序算法中，归并排序的效率是比较高的。如果数组长度为N，将数组分割成长度为1的子数组需要logN步，中间针对各个长度的子数组归并的时间复杂度为O(N)，所以归并排序的时间复杂度为O(NlogN)；因为需要临时数组来辅助归并过程，所以归并排序的空间复杂度为O(N)。*另外，归并排序是稳定的排序算法，在最差情况和最优情况下的时间复杂度均为O(NlogN)。*
+
+
+### _#_ 3. <span id='3'>快速排序 && 冒泡排序</span>
+
+> 暂不考虑JS里面的稀疏数组，如果为稀疏数组，先遍历一遍把所有的稀疏元素移动到数组的最右边，然后开始执行原来的排序算法。
+
+冒泡排序比较简单，主要思想是通过相邻元素的两两比较，把最大的元素一步一步交换到最右边的位置，此时最大的元素已经处于排序后的正确位置，排除最大的元素并继续对剩余元素应用冒泡排序，直到剩下唯一的元素。
+
+标准的冒泡排序实现代码如下（非递归版本），也可以添加一个flag变量表示当前遍历是否有交换元素，如果没有则表示已经有序，所以可以提前退出外层循环：
+```js
+function bubbleSort(arr) {
+    var len = arr.length;
+    for (var minIndex = 0; minIndex < len - 1; minIndex++) {
+        for (var tempIndex = len - 1; tempIndex > minIndex; tempIndex--) {
+            if ( arr[tempIndex] < arr[tempIndex - 1]) {
+                [arr[tempIndex - 1], arr[tempIndex]] = [arr[tempIndex], arr[tempIndex - 1]];
+            }
+        }
+    }
+}
+
+// 添加flag优化版本
+function bubbleSort(arr) {
+    var len = arr.length, flag = true;
+    for (var minIndex = 0; minIndex < len - 1 && flag; minIndex++) {
+        flag = false;
+        for (var tempIndex = len - 1; tempIndex > minIndex; tempIndex--) {
+            if (arr[tempIndex] < arr[tempIndex - 1]) {
+                [arr[tempIndex - 1], arr[tempIndex]] = [arr[tempIndex], arr[tempIndex - 1]];
+                flag = true;
+            }
+        }
+    }
+}
+```
+
+实际上冒泡排序也可以不用相邻元素来进行两两比较，只要保证在每一趟遍历之后最小值到达正确位置就行，下面的代码在遍历过程中均和数组的起始元素比较，每一趟得到一个当前的最小值
+```js
+function bubbleSort(arr) {
+    var len = arr.length;
+    for (var minIndex = 0; minIndex < len - 1; minIndex++) {
+        for (var tempIndex = minIndex + 1; temIndex < len; tempIndex++) {
+            if (arr[tempIndex] < arr[minIndex]) {
+                [arr[minIndex], arr[tempIndex]] = [arr[tempIndex], arr[minIndex]];
+            }
+        }
+    }
+}
+```
+
+从左到右的冒泡算法（实际上是沉底排序，而不是真正意义上的冒泡排序，冒泡排序保证最小的元素先调整到位）实现代码如下（非递归版本）：
+```js
+function bubbleSort(arr) {
+    for (var maxIndex = arr.length - 1; maxIndex > 0; maxIndex--) {
+        for (var tempIndex = 0; tempIndex < maxIndex; tempIndex++) {
+            if (arr[tempIndex] > arr[tempIndex + 1]) {
+                [arr[tempIndex], arr[tempIndex + 1]] = [arr[tempIndex + 1], arr[tempIndex]]; 
+            }
+        }
+    }
+}
+```
+
+由于冒泡排序的“[乌龟问题](https://blog.csdn.net/lemon_tree12138/article/details/50591859)”，又衍生出了一种双向冒泡排序，主要思想是：奇数趟冒泡，偶数趟沉底。（代码如下）
+> 乌龟问题是说：假设我们需要将序列A按照升序序列排序。序列中的较小的数字又大量存在于序列的尾部，冒泡排序会让小数字向前移动得很缓慢。
+```js
+function bubbleSort(arr) {
+    var len = arr.length;
+    var startIndex = 0, endIndex = len - 1, tempIndex = 0;
+    while (startIndex < endIndex) {
+        for (tempIndex = endIndex; tempIndex > startIndex; tempIndex--) {
+            if (arr[tempIndex] < arr[tempIndex - 1]) {
+                [arr[tempIndex - 1], arr[tempIndex]] = [arr[tempIndex], arr[tempIndex - 1]];
+            }
+        }
+        startIndex++;
+
+        for (tempIndex = startIndex; tempIndex < endIndex; tempIndex++) {
+            if (arr[tempIndex] > arr[tempIndex + 1]) {
+                [arr[tempIndex], arr[tempIndex + 1]] = [arr[tempIndex + 1], arr[tempIndex]];
+            }
+        }
+        endIndex--;
+    }
+}
+```
+
+> 快速排序是对冒泡排序的一种改进，均属于交换排序的算法。（交换排序包括：冒泡排序/奇偶排序/快速排序）
+
+&nbsp;&nbsp;&nbsp;&nbsp;快速排序的基本思想是：通过一趟排序将要排序的数组分割成两个独立的部分，其中一部分的的所有数据都比另外一部分的数据小；然后再按照此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，从而使得最终的数组有序。快速排序作为一种交换排序，其交换方式主要有两种：标准交换法 和 两头交换法。
+
+#### 标准交换法步骤
+> 1. 从待排序数组中选择一个合适的元素elem作为排序基准（常规做法是选取待排序数组的第一个元素；也可以随机选择待排序数组的某个元素，将其与第一个元素交换，然后再按标准流程排序，这样可以避免当待排序数组部分有序的时候算法效率降低，交换后可以确保刚开始的时候数组的第一个位置是一个_被挖出的坑_，需要被填充）；
+> 2. 执行一趟排序过程，将待排序数组中所有比基准元素小的元素交换到左边，所有比基准元素大的元素交换到右边，此时基准元素在待排序数组中交换到了正确的位置，而且其左右被分割成了两个待排序的子数组sub1和sub2;
+> 3. 判断sub1和sub2的元素个数，如果只有一个元素，则该子数组已经有序；否则分别对sub1/sub2递归执行快速排序；
+
+#### 代码
+
+```js
+/*
+ * 功能：交换并返回分界点（标准交换法）
+ * 
+ * @param arr
+ *      待排序数组
+ * @param startIndex
+ *      开始位置
+ * @param endIndex
+ *      结束位置
+ * @return
+ *      分界点
+ */
+function partition(arr, startIndex, endIndex) {
+    var base = arr[startIndex];
+    var leftIndex = startIndex, rightIndex = endIndex;
+    while (leftIndex < rightIndex) {
+        while (leftIndex < rightIndex && arr[rightIndex] >= base) {
+            rightIndex--;
+        }
+        arr[leftIndex] = arr[rightIndex];
+        while (leftIndex < rightIndex && arr[leftIndex] <= base) {
+            leftIndex++;
+        }
+        arr[rightIndex] = arr[leftIndex];
+    }
+
+    arr[leftIndex] = base;
+    return leftIndex;
+}
+/*
+ * 排序的核心算法
+ * 
+ * @param arr
+ *      待排序数组
+ * @param startIndex
+ *      开始位置
+ * @param endIndex
+ *      结束位置
+ */
+function quickSort(arr, startIndex, endIndex) {
+    if (startIndex >= endIndex) {
+        return ;
+    }
+    var boundary = partition(arr, startIndex, endIndex);
+    quickSort(arr, startIndex, boundary - 1);
+    quickSort(arr, boundary + 1, endIndex);
+}
+```
+
+#### 两头交换法主要思想
+> 两头交换法先从左边开始找到大于基准值的那个数，再从右边找到小于基准值的那个数，将两个数交换(这样比基准值小的都在左边，比基准值大的都在右边)，而两头交换法又分为_官方版本_和_基准不参与交换版本_， _官方版本_的主要思想是基准元素也参与交换过程，一趟排序过后，可以确保左边子数组中的元素都小于基准值，右边子数组中的元素都大于等于基准值，此时基准值在数组中不一定处于正确的位置，再递归排序左右两个子数组；_基准不参与交换版本_的主要思想和标准交换法类似，也是保证一趟排序后基准值到达最终的正确位置，只是在交换的时候采用两头交换的方式加快算法的处理速度。 
+
+两头交换法-官方版
+```js
+function partition(arr, startIndex, endIndex) {
+    var base = arr[(startIndex + endIndex) >> 1];  // 官方版本中基准值参与交换过程，所以基准值可以取任意位置的元素，此处我们取中位数
+    var leftIndex = startIndex, rightIndex = endIndex;
+
+    while (leftIndex <= rightIndex) {
+        while (arr[leftIndex] < base) leftIndex++;
+        while (arr[rightIndex] > base) rightIndex--;
+
+        if (leftIndex <= rightIndex) {
+            [arr[leftIndex], arr[rightIndex]] = [arr[rightIndex], arr[leftIndex]]; // 交换元素
+            leftIndex++;
+            rightIndex--;
+        }
+    }
+    return [leftIndex, rightIndex];
+}
+
+function quickSort(arr, startIndex, endIndex) {
+    if (startIndex >= endIndex) {
+        return ;
+    }
+    var [leftIndex, rightIndex] = partition(arr, startIndex, endIndex);
+    quickSort(arr, startIndex, rightIndex);
+    quickSort(arr, leftIndex, endIndex);
+}
+```
+
+两头交换法-基准不参与交换版
+```js
+function partition(arr, startIndex, endIndex) {
+    var base = arr[startIndex]; // 基准不参与交换版本中基准值只能取第一个元素或者最后一个元素，此处我们取第一个元素，取最后一个元素的代码类似，需要确保填充最后一个元素“坑”的元素是不小于基准值的第一个元素
+    var leftIndex = startIndex + 1, rightIndex = endIndex;
+    
+    while (leftIndex <= rightIndex) {
+        while (leftIndex <= endIndex && arr[leftIndex] < base) leftIndex++;
+        while (arr[rightIndex] > base) rightIndex--;
+
+        if (leftIndex <= rightIndex) {
+            [arr[leftIndex], arr[rightIndex]] = [arr[rightIndex], arr[leftIndex]]; // 交换元素
+            leftIndex++;
+            rightIndex--;
+        }
+    }
+    arr[startIndex] = arr[rightIndex];
+    arr[rightIndex] = base;
+    return rightIndex;
+}
+
+function quickSort(arr, startIndex, endIndex) {
+    if (startIndex >= endIndex) {
+        return ;
+    }
+    var boundary = partition(arr, startIndex, endIndex);
+    quickSort(arr, startIndex, boundary - 1);
+    quickSort(arr, boundary + 1, endIndex);
+}
+```

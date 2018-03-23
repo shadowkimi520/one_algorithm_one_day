@@ -1,8 +1,9 @@
 # one_algorithm_one_day
 每天一道算法题
+<p>abc</p>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+
 > 为了应付面试，开始写博客，准备开三个系列，第一个 `JS算法系列`，主要整理一些面试过程中常见的算法题 ； 第二个 `ECMAScript规范解析`，主要是想从ES规范的角度来解析JS代码的实际执行过程，只有真正懂得了底层干了什么，才能完全理解JS，而不需要记住很多零散的坑； 第三个 `JS开源库代码阅读`，通过阅读开源代码加深对JS的理解，同时积累大型项目开发的最佳实践。
 
 
@@ -432,3 +433,5 @@ function quickSort(arr, startIndex, endIndex) {
     quickSort(arr, boundary + 1, endIndex);
 }
 </code></pre>
+
+<script>hljs.initHighlightingOnLoad();</script>

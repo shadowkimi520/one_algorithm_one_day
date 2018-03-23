@@ -2,7 +2,7 @@
 每天一道算法题
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
-
+<script>hljs.initHighlightingOnLoad();</script>
 > 为了应付面试，开始写博客，准备开三个系列，第一个 `JS算法系列`，主要整理一些面试过程中常见的算法题 ； 第二个 `ECMAScript规范解析`，主要是想从ES规范的角度来解析JS代码的实际执行过程，只有真正懂得了底层干了什么，才能完全理解JS，而不需要记住很多零散的坑； 第三个 `JS开源库代码阅读`，通过阅读开源代码加深对JS的理解，同时积累大型项目开发的最佳实践。
 
 
@@ -403,7 +403,7 @@ function quickSort(arr, startIndex, endIndex) {
 ```
 
 两头交换法-基准不参与交换版
-
+<pre><code>
 function partition(arr, startIndex, endIndex) {
     var base = arr[startIndex]; // 基准不参与交换版本中基准值只能取第一个元素或者最后一个元素，此处我们取第一个元素，取最后一个元素的代码类似，需要确保填充最后一个元素“坑”的元素是不小于基准值的第一个元素
     var leftIndex = startIndex + 1, rightIndex = endIndex;
@@ -431,3 +431,4 @@ function quickSort(arr, startIndex, endIndex) {
     quickSort(arr, startIndex, boundary - 1);
     quickSort(arr, boundary + 1, endIndex);
 }
+</code></pre>

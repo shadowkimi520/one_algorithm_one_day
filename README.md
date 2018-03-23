@@ -442,7 +442,7 @@ function quickSort(arr, startIndex, endIndex) {
 
 <script>
 hljs.configure({
-  languages: ['js']
+  languages: ['cs']
 })
 hljs.initHighlightingOnLoad();
 </script>

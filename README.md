@@ -443,6 +443,7 @@ function quickSort(arr, startIndex, endIndex) {
 插入排序顾名思义：将一个元素插入到一个有序数组中，使得插入该元素后的数组依然有序。
 
 > 简单插入排序的思想：第一个元素形成的子数组已然有序，第二个元素开始往后选择哨兵元素，依次将哨兵元素插入到前面子数组的正确位置，使得包含哨兵元素的子数组也是有序的，该算法是稳定的。
+
 ```js
 function insertSort(arr) {
     var endIndex = arr.length - 1, tempIndex;
@@ -461,6 +462,7 @@ function insertSort(arr) {
 ```
 
 > 简单插入排序在数组已经有序或者部分有序的情况下效率比较高，shell排序正是利用了这一点。希尔排序的主要思想是：把一个数组中的所有元素按照步长（也称增量）分为几部分，先对几个小部分的元素各自执行简单插入排序，让数组的元素大概有序，最后在所有元素上执行一遍简单插入排序。希尔排序是不稳定的排序算法。
+
 ```js
 function shellSort(arr) {
     var len = arr.length; d = len >> 1;

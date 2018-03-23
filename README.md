@@ -16,6 +16,7 @@ There are two sorted arrays nums1 and nums2 of size m and n respectively.
 Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)). 
 
 [具体参考leetCode](https://leetcode.com/problems/median-of-two-sorted-arrays/description/)
+
 ```cs
 Example 1:
 nums1 = [1, 3]
@@ -77,6 +78,7 @@ The median is (2 + 3) / 2 = 2.5
     ```
     > NOTE1: JS中数字均为浮点数，因此需要使用 parseInt 取整
     > NOTE2: findKth函数的代码中第一个数组的第p个元素的下标是pos1, 它是该数组中的第 pos1-start1+1 个元素，即第parseInt(k / 2)个元素；同理，第二个数组中的第q个元素为第二个数组中的第 parseInt(k / 2)个元素，此时p+q = 2 * parseInt(k / 2)， 当k为基数时 2 * parseInt(k / 2) 比 k 小1， 而我们的假设中p + q === k，之所以上述代码可以得到正确的结果是因为 k - 1 <= p + q <= k，只要p+q 不大于k，被淘汰掉的parseInt(k / 2)个元素中就不可能包含TOP(K)元素，只不过是有时候在一次递归过程中少淘汰一个元素而已。下面的代码我们严格按照 p + q === k来执行淘汰，也能得到正确的结果（仅修改了添加注释的两行代码）：
+
     ```cs
     var pos1 = start1 + parseInt(k / 2) - 1;
     var key1 = (pos1 >= arr1.length ? Number.POSITIVE_INFINITY ：arr1[pos1]);

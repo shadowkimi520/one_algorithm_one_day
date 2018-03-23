@@ -16,7 +16,7 @@ There are two sorted arrays nums1 and nums2 of size m and n respectively.
 Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)). 
 
 [具体参考leetCode](https://leetcode.com/problems/median-of-two-sorted-arrays/description/)
-```js
+```cs
 Example 1:
 nums1 = [1, 3]
 nums2 = [2]
@@ -42,7 +42,7 @@ The median is (2 + 3) / 2 = 2.5
     
     为了提高查找效率，采用折半查找，p设定为第 parseInt(k / 2) 个元素，这样每次淘汰的时候能淘汰掉（大约）一半的元素，从而使得递归的时候TOP(k)中的k的规模减半；对于中值问题，初始的时候k的大小为(m+n)/2，随后递归的时候每次K都减半，因此该算法的时候复杂度为O(log(m+n))
 
-    ```js
+    ```cs
     function findMedian(arr1, arr2) {
         var len1 = arr1.length, len2 = arr2.length, sum_len = len1 + len2;
         if (sum_len & 1) {
@@ -77,7 +77,7 @@ The median is (2 + 3) / 2 = 2.5
     ```
     > NOTE1: JS中数字均为浮点数，因此需要使用 parseInt 取整
     > NOTE2: findKth函数的代码中第一个数组的第p个元素的下标是pos1, 它是该数组中的第 pos1-start1+1 个元素，即第parseInt(k / 2)个元素；同理，第二个数组中的第q个元素为第二个数组中的第 parseInt(k / 2)个元素，此时p+q = 2 * parseInt(k / 2)， 当k为基数时 2 * parseInt(k / 2) 比 k 小1， 而我们的假设中p + q === k，之所以上述代码可以得到正确的结果是因为 k - 1 <= p + q <= k，只要p+q 不大于k，被淘汰掉的parseInt(k / 2)个元素中就不可能包含TOP(K)元素，只不过是有时候在一次递归过程中少淘汰一个元素而已。下面的代码我们严格按照 p + q === k来执行淘汰，也能得到正确的结果（仅修改了添加注释的两行代码）：
-    ```js
+    ```cs
     var pos1 = start1 + parseInt(k / 2) - 1;
     var key1 = (pos1 >= arr1.length ? Number.POSITIVE_INFINITY ：arr1[pos1]);
 
@@ -97,7 +97,7 @@ The median is (2 + 3) / 2 = 2.5
     2. 如果arr1[mid1] > arr2[mid2], 此时又可以分为两种情况：如果从两个数组开始到中位数（包括中位数）的元素个数之和大于k，就表示第K大的元素一定不在arr1[mid1...end1]当中，因此可以将它们淘汰掉；如果从两个数组开始到中位数（包括中位数）的元素个数之和小于等于k，就表示arr2[beg2...mid2]元素一定属于第k大元素之前的部分，即这一部分一定比第k大元素来的小，因此可以将它们先排除掉，问题就缩小为从剩下的数组中查找TOP(k-(mid1-beg1+1))，可以递归求解；
      
     代码如下：
-    ```js
+    ```cs
     function findMedian(arr1, arr2) {
         var len1 = arr1.length, len2 = arr2.length, sum_len = len1 + len2;
         if (sum_len & 1) {
@@ -150,7 +150,7 @@ The median is (2 + 3) / 2 = 2.5
 首先考虑下如何将两个有序数组合并，思路很简单：从头开始比较两个数组的对应元素，将较小的元素先插入到临时数组中，更新索引下标；如果其中一个数组为空，则另外一个数组中剩下的元素依次进入临时数组。
 
 代码如下：
-```js
+```cs
 function mergeArray(arr1, arr2, temp_arr) {
     var i = 0, j = 0;
     var len1 = arr1.length, len2 = arr2.length;
@@ -183,7 +183,7 @@ function mergeArray(arr1, arr2, temp_arr) {
 
 如何让左右两部分各自有序呢？可以将左右两个数组各自再分割成两组，依次下去，当分出来的子数组只有一个元素时，可以认为这个子数组已经有序了，然后再归并相邻的两个子数组。我们可以通过先递归地分割数组，再合并数组就实现了归并排序。
 
-```js
+```cs
 function mergeArray(arr, first, mid, last, temp_arr) {
     var i = first, j = mid + 1, k = 0;
 
@@ -230,7 +230,7 @@ function mergeSort(arr, first, last, temp_arr) {
 冒泡排序比较简单，主要思想是通过相邻元素的两两比较，把最大的元素一步一步交换到最右边的位置，此时最大的元素已经处于排序后的正确位置，排除最大的元素并继续对剩余元素应用冒泡排序，直到剩下唯一的元素。
 
 标准的冒泡排序实现代码如下（非递归版本），也可以添加一个flag变量表示当前遍历是否有交换元素，如果没有则表示已经有序，所以可以提前退出外层循环：
-```js
+```cs
 function bubbleSort(arr) {
     var len = arr.length;
     for (var minIndex = 0; minIndex < len - 1; minIndex++) {
@@ -258,7 +258,7 @@ function bubbleSort(arr) {
 ```
 
 实际上冒泡排序也可以不用相邻元素来进行两两比较，只要保证在每一趟遍历之后最小值到达正确位置就行，下面的代码在遍历过程中均和数组的起始元素比较，每一趟得到一个当前的最小值
-```js
+```cs
 function bubbleSort(arr) {
     var len = arr.length;
     for (var minIndex = 0; minIndex < len - 1; minIndex++) {
@@ -286,7 +286,8 @@ function bubbleSort(arr) {
 
 由于冒泡排序的“[乌龟问题](https://blog.csdn.net/lemon_tree12138/article/details/50591859)”，又衍生出了一种双向冒泡排序，主要思想是：奇数趟冒泡，偶数趟沉底。（代码如下）
 > 乌龟问题是说：假设我们需要将序列A按照升序序列排序。序列中的较小的数字又大量存在于序列的尾部，冒泡排序会让小数字向前移动得很缓慢。
-```js
+
+```cs
 function bubbleSort(arr) {
     var len = arr.length;
     var startIndex = 0, endIndex = len - 1, tempIndex = 0;
@@ -319,7 +320,7 @@ function bubbleSort(arr) {
 
 #### 代码
 
-```js
+```cs
 /*
  * 功能：交换并返回分界点（标准交换法）
  * 
@@ -373,7 +374,7 @@ function quickSort(arr, startIndex, endIndex) {
 > 两头交换法先从左边开始找到大于基准值的那个数，再从右边找到小于基准值的那个数，将两个数交换(这样比基准值小的都在左边，比基准值大的都在右边)，而两头交换法又分为_官方版本_和_基准不参与交换版本_， _官方版本_的主要思想是基准元素也参与交换过程，一趟排序过后，可以确保左边子数组中的元素都小于基准值，右边子数组中的元素都大于等于基准值，此时基准值在数组中不一定处于正确的位置，再递归排序左右两个子数组；_基准不参与交换版本_的主要思想和标准交换法类似，也是保证一趟排序后基准值到达最终的正确位置，只是在交换的时候采用两头交换的方式加快算法的处理速度。 
 
 两头交换法-官方版
-```js
+```cs
 function partition(arr, startIndex, endIndex) {
     var base = arr[(startIndex + endIndex) >> 1];  // 官方版本中基准值参与交换过程，所以基准值可以取任意位置的元素，此处我们取中位数
     var leftIndex = startIndex, rightIndex = endIndex;
@@ -434,6 +435,8 @@ function quickSort(arr, startIndex, endIndex) {
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atelier-estuary-dark.min.css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/javascript.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>

@@ -376,7 +376,7 @@ function quickSort(arr, startIndex, endIndex) {
 > 两头交换法先从左边开始找到大于基准值的那个数，再从右边找到小于基准值的那个数，将两个数交换(这样比基准值小的都在左边，比基准值大的都在右边)，而两头交换法又分为_官方版本_和_基准不参与交换版本_， _官方版本_的主要思想是基准元素也参与交换过程，一趟排序过后，可以确保左边子数组中的元素都小于基准值，右边子数组中的元素都大于等于基准值，此时基准值在数组中不一定处于正确的位置，再递归排序左右两个子数组；_基准不参与交换版本_的主要思想和标准交换法类似，也是保证一趟排序后基准值到达最终的正确位置，只是在交换的时候采用两头交换的方式加快算法的处理速度。 
 
 两头交换法-官方版
-```cs
+```js
 function partition(arr, startIndex, endIndex) {
     var base = arr[(startIndex + endIndex) >> 1];  // 官方版本中基准值参与交换过程，所以基准值可以取任意位置的元素，此处我们取中位数
     var leftIndex = startIndex, rightIndex = endIndex;
@@ -405,7 +405,8 @@ function quickSort(arr, startIndex, endIndex) {
 ```
 
 两头交换法-基准不参与交换版
-```cs
+<pre>
+<code class='cs'>
 function partition(arr, startIndex, endIndex) {
     var base = arr[startIndex]; // 基准不参与交换版本中基准值只能取第一个元素或者最后一个元素，此处我们取第一个元素，取最后一个元素的代码类似，需要确保填充最后一个元素“坑”的元素是不小于基准值的第一个元素
     var leftIndex = startIndex + 1, rightIndex = endIndex;
@@ -433,12 +434,13 @@ function quickSort(arr, startIndex, endIndex) {
     quickSort(arr, startIndex, boundary - 1);
     quickSort(arr, boundary + 1, endIndex);
 }
-```
+</code>
+</pre>
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atelier-estuary-dark.min.css">
 
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/cs.min.js"></script>
-<!-- <script>hljs.initHighlightingOnLoad();</script> -->
+
+<script>hljs.initHighlightingOnLoad();</script>

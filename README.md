@@ -8,6 +8,8 @@
 > 1. [求两个已排序数组的中位数](#-1-求两个已排序数组的中位数)
 > 2. [归并排序](#-2-归并排序)
 > 3. [交换排序：冒泡排序/奇偶排序/快速排序](#-3-交换排序冒泡排序奇偶排序快速排序)
+> 4. [插入排序：简单插入排序/希尔排序](#-4-插入排序简单插入排序希尔排序)
+> 5. [选择排序：简单选择排序/堆排序](#-5-选择排序简单选择排序堆排序)
 
 ### _#_ 1. 求两个已排序数组的中位数
 
@@ -378,7 +380,8 @@ function quickSort(arr, startIndex, endIndex) {
 两头交换法-官方版
 ```js
 function partition(arr, startIndex, endIndex) {
-    var base = arr[(startIndex + endIndex) >> 1];  // 官方版本中基准值参与交换过程，所以基准值可以取任意位置的元素，此处我们取中位数
+    // 官方版本中基准值参与交换过程，所以基准值可以取任意位置的元素，此处我们取中位数
+    var base = arr[(startIndex + endIndex) >> 1];  
     var leftIndex = startIndex, rightIndex = endIndex;
 
     while (leftIndex <= rightIndex) {
@@ -407,7 +410,8 @@ function quickSort(arr, startIndex, endIndex) {
 两头交换法-基准不参与交换版
 ```js
 function partition(arr, startIndex, endIndex) {
-    var base = arr[startIndex]; // 基准不参与交换版本中基准值只能取第一个元素或者最后一个元素，此处我们取第一个元素，取最后一个元素的代码类似，需要确保填充最后一个元素“坑”的元素是不小于基准值的第一个元素
+    // 基准不参与交换版本中基准值只能取第一个元素或者最后一个元素，此处我们取第一个元素，取最后一个元素的代码类似，需要确保填充最后一个元素“坑”的元素是不小于基准值的第一个元素
+    var base = arr[startIndex]; 
     var leftIndex = startIndex + 1, rightIndex = endIndex;
     
     while (leftIndex <= rightIndex) {
@@ -432,6 +436,68 @@ function quickSort(arr, startIndex, endIndex) {
     var boundary = partition(arr, startIndex, endIndex);
     quickSort(arr, startIndex, boundary - 1);
     quickSort(arr, boundary + 1, endIndex);
+}
+```
+
+### 4. _#_ 插入排序：简单插入排序/希尔排序
+插入排序顾名思义：将一个元素插入到一个有序数组中，使得插入该元素后的数组依然有序。
+
+> 简单插入排序的思想：第一个元素形成的子数组已然有序，第二个元素开始往后选择哨兵元素，依次将哨兵元素插入到前面子数组的正确位置，使得包含哨兵元素的子数组也是有序的，该算法是稳定的。
+```js
+function insertSort(arr) {
+    var endIndex = arr.length - 1, tempIndex;
+    for (var startIndex = 1; startIndex <= endIndex; startIndex++) {
+        var sentinel = arr[startIndex];
+        for (tempIndex = startIndex - 1; tempIndex >= 0; tempIndex--) {
+           if (arr[tempIndex] > sentinel) {
+               arr[tempIndex + 1] = arr[tempIndex];
+           } else {
+               break; // 最大的元素都比哨兵元素小，前面的不需要进行比较
+           }
+        }
+        arr[tempIndex + 1] = sentinel;
+    }
+}
+```
+
+> 简单插入排序在数组已经有序或者部分有序的情况下效率比较高，shell排序正是利用了这一点。希尔排序的主要思想是：把一个数组中的所有元素按照步长（也称增量）分为几部分，先对几个小部分的元素各自执行简单插入排序，让数组的元素大概有序，最后在所有元素上执行一遍简单插入排序。希尔排序是不稳定的排序算法。
+```js
+function shellSort(arr) {
+    var len = arr.length; d = len >> 1;
+    while (d > 0) {
+        for (var startIndex = d; startIndex < len; startIndex++) {
+            var sentinel = arr[startIndex];
+            for (var tempIndex = startIndex - d; tempIndex >= 0; tempIndex -= d) {
+                if (arr[tempIndex] > sentinel) {
+                    arr[tempIndex + d] = arr[tempIndex];
+                } else {
+                    break;
+                }
+            }
+            arr[tempIndex + d] = sentinel;
+        }
+        d >>= 1;
+    }
+}
+```
+
+### 5. _#_ 选择排序：简单选择排序/堆排序
+
+```js
+function selectionSort(arr) {
+    var len = arr.length;
+    for (var startIndex = 0; startIndex < len - 1; startIndex++) {
+        var min = arr[startIndex], minIndex = startIndex;
+        for (var tempIndex = startIndex + 1; tempIndex < len; tempIndex++) {
+            if (arr[tempIndex] < min) {
+                min = arr[tempIndex];
+                minIndex = tempIndex;
+            }
+        }
+        if (minIndex !== startIndex) {
+            [arr[startIndex], arr[minIndex]] = [arr[minIndex], arr[startIndex]];
+        }
+    }
 }
 ```
 

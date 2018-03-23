@@ -406,7 +406,7 @@ function quickSort(arr, startIndex, endIndex) {
 
 两头交换法-基准不参与交换版
 <pre>
-<code class='cs'>
+<code>
 function partition(arr, startIndex, endIndex) {
     var base = arr[startIndex]; // 基准不参与交换版本中基准值只能取第一个元素或者最后一个元素，此处我们取第一个元素，取最后一个元素的代码类似，需要确保填充最后一个元素“坑”的元素是不小于基准值的第一个元素
     var leftIndex = startIndex + 1, rightIndex = endIndex;

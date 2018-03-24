@@ -505,6 +505,73 @@ function selectionSort(arr) {
 }
 ```
 
+堆排序算法中一般直接选择二叉堆，因为数组可以直观的表示一棵完全二叉树（相比于二项式堆，斐波那契堆等）。在升序排列时我们需要使用大顶堆，即根节点的值大于左右子节点的值，而且左右子树都是大顶堆；堆排序的第一步操作是先将待排序数组转化为一个大顶堆，随后每趟排序取未排序数组的末尾数与根节点交换，使得当前最大值处于正确位置，随后调整交换后的数组使其仍然为一个大顶堆，依次下去直到堆中只剩下一个元素。[详细演示](https://www.cnblogs.com/chengxiao/p/6129630.html)
+
+```js
+// 大顶堆
+function maxHeapSort(arr) {
+    var len = arr.length;
+    for (var i = (len >> 1) - 1; i >= 0; i--) {
+        maxHeapAdjust(arr, i, len - 1);
+    }
+
+    for (var j = len - 1; j > 0; j--) {
+        [arr[j], arr[0]] = [arr[0], arr[j]];
+        maxHeapAdjust(arr, 0, j - 1);
+    }
+}
+
+function maxHeapAdjust(arr, startIndex, endIndex) {
+    var temp = arr[startIndex], tempIndex = 2 * startIndex + 1;
+    while (tempIndex <= endIndex) {
+        if (tempIndex + 1 <= endIndex && arr[tempIndex] < arr[tempIndex + 1]) {
+            tempIndex++;
+        }
+        if (arr[tempIndex] > temp) {
+            arr[startIndex] = arr[tempIndex];
+            startIndex = tempIndex;
+        } else {
+            break;
+        }
+        tempIndex = tempIndex * 2 + 1;
+    }
+    arr[startIndex] = temp;
+}
+```
+
+```js
+// 小顶堆
+function minHeapSort(arr) {
+    var len = arr.length;
+    for (var i = (len - 1) >> 1; i >= 0; i--) {
+        minHeapAdjust(arr, i, len - 1);
+    }
+
+    for (var j = len - 1; j > 0; j--) {
+        [arr[j], arr[0]] = [arr[0], arr[j]];
+        minHeapAdjust(arr, 0, j - 1);
+    }
+}
+
+function minHeapAdjust(arr, startIndex, endIndex) {
+    var temp = arr[startIndex], tempIndex = 2 * startIndex + 1；
+    while (tempIndex <= endIndex) {
+        if (tempIndex + 1 <= endIndex && arr[tempIndex] > arr[tempIndex + 1]) {
+            tempIndex++;
+        }
+        if (arr[tempIndex] < temp) {
+            arr[startIndex] = arr[tempIndex];
+            startIndex = tempIndex;
+        } else {
+            break;
+        }
+        tempIndex = 2 * tempIndex + 1;
+    }
+    arr[startIndex] = temp;
+}
+```
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
